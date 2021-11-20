@@ -4,8 +4,9 @@ import { View, ScreenSpinner, AdaptivityProvider, AppRoot, Snackbar, Avatar } fr
 import '@vkontakte/vkui/dist/vkui.css';
 import { Icon24Error } from '@vkontakte/icons';
 
-import Home from './panels/Home';
-import Intro from './panels/Intro';
+import Home from './panels/Home/Home';
+import Intro from './panels/Intro/Intro';
+import { BRIDGE, BRIDGE_EVENTS_APP } from './bridge-events';
 
 const ROUTES = { 
     HOME: 'home',
@@ -25,18 +26,17 @@ const App = () => {
 
 	useEffect(() => {
 		bridge.subscribe(({ detail: { type, data }}) => {
-			if (type === 'VKWebAppUpdateConfig') {
+			if (type === BRIDGE.APP_UPDATE_CONFIG) {
 				const schemeAttribute = document.createAttribute('scheme');
 				schemeAttribute.value = data.scheme ? data.scheme : 'client_light';
 				document.body.attributes.setNamedItem(schemeAttribute);
 			}
 		});
 		async function fetchData() {
-			const user = await bridge.send('VKWebAppGetUserInfo');
-			const storageData = await bridge.send('VKWebAppStorageGet', {
+			const user = await bridge.send(BRIDGE.APP_GET_USER_INFO);
+			const storageData = await bridge.send(BRIDGE.APP_STORAGE_GET, {
 				keys: Object.values(STORAGE_KEYS)
 			 });
-			console.log(storageData);
 			const data = {};
 			storageData.keys.forEach( ({ key, value }) => {
 				try {
@@ -99,7 +99,7 @@ const App = () => {
 	return (
 		<AdaptivityProvider>
 			<AppRoot>
-				<View activePanel={activePanel} popout={popout}>
+				<View activePanel={activePanel}>
 					<Home id={ ROUTES.HOME } fetchedUser={fetchedUser} go={go} snackbarError={Snackbar}/>
 					<Intro id={ ROUTES.INTRO } go={go} snackbarError={Snackbar}/>
 				</View>
