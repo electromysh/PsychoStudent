@@ -6,11 +6,13 @@ import { Icon24Error } from '@vkontakte/icons';
 
 import Home from './panels/Home/Home';
 import Intro from './panels/Intro/Intro';
+import Test from './panels/Test/Test';
 import { BRIDGE, BRIDGE_EVENTS_APP } from './bridge-events';
 
 const ROUTES = { 
     HOME: 'home',
-	INTRO: 'intro'
+	INTRO: 'intro',
+	TEST: 'test',
 };
 
 const STORAGE_KEYS = {
@@ -18,7 +20,7 @@ const STORAGE_KEYS = {
 }
 
 const App = () => {
-	const [activePanel, setActivePanel] = useState(ROUTES.INTRO);
+	const [activePanel, setActivePanel] = useState(ROUTES.TEST);
 	const [fetchedUser, setUser] = useState(null);
 	const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
 	const [UserHasSeenIntro, setUserHasSeenIntro] = useState(false);
@@ -102,6 +104,7 @@ const App = () => {
 				<View activePanel={activePanel}>
 					<Home id={ ROUTES.HOME } fetchedUser={fetchedUser} go={go} snackbarError={Snackbar}/>
 					<Intro id={ ROUTES.INTRO } go={go} snackbarError={Snackbar}/>
+					<Test id={ ROUTES.TEST } go={go} snackbarError={Snackbar}/>
 				</View>
 			</AppRoot>
 		</AdaptivityProvider>

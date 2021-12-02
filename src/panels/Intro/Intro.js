@@ -8,19 +8,13 @@ import { APP_NAME, DEFAULT_AVATAR } from '../../constants';
 const Intro = ({ id, snackbarError }) => {
 	
 	const [user, setUser] = useState(null);
-	// const [photos, setPhotos] = useState(null);
-	const [video, setVideo] = useState(null);
-	
+
 	useEffect(() => {
-		(async () => {
-			const user = await userData.getUserBaseInfo();
-			// const photos = await userData.getUserPhotos(user.id);
-			const video = await userData.getUserVideo(user.id);
-			setUser(user);
-			// setPhotos(photos);
-			setVideo(video);
-		})();
+		userData.getUserBaseInfo()
+			.then(user => setUser(user));
 	});
+
+	
 
 	return (
 		<Panel id={id} centered={true}>
@@ -30,14 +24,8 @@ const Intro = ({ id, snackbarError }) => {
 			{ user ?
 				<Group header={ <Header>Привет!</Header>} >
 					{/* <pre style={{ width: 500 + 'px' }}>
-						{ JSON.stringify(user, null, '   ') }
-					</pre> */}
-					{/* <pre style={{ width: 500 + 'px' }}>
-						{ JSON.stringify(photos, null, '   ') }
-					</pre> */}
-					<pre style={{ width: 500 + 'px' }}>
 						{ JSON.stringify(video, null, '   ') }
-					</pre>
+					</pre> */}
 					<CardGrid size="l">
 						<Card mode="shadow" style={{ padding: 10 + 'px' }}>
 							<Cell

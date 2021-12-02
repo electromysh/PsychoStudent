@@ -13,11 +13,12 @@ class AuthData {
         }
         return bridge.send("VKWebAppGetAuthToken", { app_id: APP_ID, scope: scopeQuery })
             .then(response => {
-                if (response && response && response.access_token) {
+                if (response && response.access_token) {
                     return response.access_token;
                 }
-                return Promise.reject('access_token не найден')
+                return Promise.reject('Токен не найден');
             })
+            .catch(err => console.log('Не удалось получить токен', err))
     }
 
 }
