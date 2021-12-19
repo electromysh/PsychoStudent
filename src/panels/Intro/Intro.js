@@ -1,57 +1,37 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Card, CardGrid, Cell, Group, Header, Panel, PanelHeader, Spinner } from '@vkontakte/vkui';
+import { Avatar, Button, Cell, Div, List, Panel, Spinner, Title } from '@vkontakte/vkui';
 
-import { userData } from '../../data/userData';
-import './Intro.css';
-import { APP_NAME, DEFAULT_AVATAR } from '../../constants';
+import { userData } from '../../data/userData'
+import Header from '../../components/Header/Header'
+import Intro from '../../Intro/markup_intron'
+import Profile from '../../components/Profile/Profile'
 
-const Intro = ({ id, snackbarError }) => {
-	
-	const [user, setUser] = useState(null);
+import './Test.css';
 
-	useEffect(() => {
-		userData.getUserBaseInfo()
-			.then(user => setUser(user));
+const Test = ({ id }) => {
+
+    const [user, setUser] = useState(null);
+    const [music, setMusic] = useState(null);
+
+	useEffect(async () => {
+		const user = await userData.getUserBaseInfo();
+		setUser(user);
+		
+		const music = await userData.getUserMusic();
+		setMusic(music);
 	});
 
-	
-
 	return (
-		<Panel id={id} centered={true}>
-			<PanelHeader>
-				<h1 className="app-name">{APP_NAME}</h1>
-			</PanelHeader>
-			{ user ?
-				<Group header={ <Header>Привет!</Header>} >
-					{/* <pre style={{ width: 500 + 'px' }}>
-						{ JSON.stringify(video, null, '   ') }
-					</pre> */}
-					<CardGrid size="l">
-						<Card mode="shadow" style={{ padding: 10 + 'px' }}>
-							<Cell
-								hasHover={false}
-								before={ user.photo_200 ? <Avatar src={user.photo_200}/> : <Avatar src={DEFAULT_AVATAR} /> }
-								description={
-									<div style={{ display: 'flex', flexDirection: 'column' }}>
-									    <span>{ user.city && user.city.title ? user.city.title : 'Город не указан'}</span>
-									    <span>{ user.bdate ? user.bdate : 'Дата рождения не указана' }</span>
-									</div>
-								}
-							>
-								{ `${user.first_name} ${user.last_name}` }
-							</Cell>
-						</Card>
-					</CardGrid>
-				</Group>
-				:
-				<Spinner size="regular" />
-			}
-
-			{ snackbarError }
+		<Panel id={id}>
+        	<Header photo={ user ? user.photo_100 : null } />
+            <Title level="2" weight="semibold" style={{ marginBottom: 16 }}>Привет, {user.name}</Title> 
+            <Text weight="semibold">Это приложение Psychostudent создано для того, </Text>
+            <Text weight="semibold">чтобы Вы смогли узнать о себе чуточку больше, </Text>
+            <Text weight="semibold">расскрыть свой психотип и понять кто Вы есть.</Text>
+			
 		</Panel>
 	);
 };
-
 
 
 export default Intro;
