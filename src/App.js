@@ -109,7 +109,6 @@ const App = () => {
 					<Intro id={ ROUTES.INTRO } go={go} snackbarError={Snackbar}/>
 					<Test id={ ROUTES.TEST } go={go} snackbarError={Snackbar}/>
 					<Edit id={ ROUTES.EDIT } go={go} snackbarError={Snackbar}/>
-					<End id={ ROUTES.END } go={go} snackbarError={Snackbar}/>
 				</View>
 			</AppRoot>
 		</AdaptivityProvider>
