@@ -6,14 +6,16 @@ import { Icon24Error } from '@vkontakte/icons';
 
 import Home from './panels/Home/Home';
 import Test from './panels/Test/Test';
-import { BRIDGE, BRIDGE_EVENTS_APP } from './bridge-events';
+import End from './panels/End/End';
+import { BRIDGE } from './bridge-events';
 import MarkupIntro from './panels/markup_intro/markup_intro';
 
 const ROUTES = { 
     HOME: 'home',
 	INTRO: 'intro',
 	TEST: 'test',
-	MARKUP_INTRO: 'markup_intro'
+	MARKUP_INTRO: 'markup_intro',
+	END: 'End',
 };
 
 const STORAGE_KEYS = {
@@ -106,6 +108,7 @@ const App = () => {
 					<Home id={ ROUTES.HOME } fetchedUser={fetchedUser} go={go} snackbarError={Snackbar}/>
 					<Test id={ ROUTES.TEST } go={go} snackbarError={Snackbar}/>
 					<MarkupIntro id={ ROUTES.MARKUP_INTRO } go={go} snackbarError={Snackbar}/>
+					<End id={ ROUTES.END } go={go} snackbarError={Snackbar}/>
 				</View>
 			</AppRoot>
 		</AdaptivityProvider>
