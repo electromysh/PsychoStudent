@@ -8,13 +8,14 @@ import Home from './panels/Home/Home';
 import Intro from './panels/Intro/Intro';
 import Test from './panels/Test/Test';
 import Edit from './panels/Edit/Edit';
-import { BRIDGE, BRIDGE_EVENTS_APP } from './bridge-events';
+import { BRIDGE } from './bridge-events';
 
 const ROUTES = { 
     HOME: 'home',
 	INTRO: 'intro',
 	TEST: 'test',
 	EDIT:'edit',
+	END: 'End',
 };
 
 const STORAGE_KEYS = {
@@ -108,6 +109,7 @@ const App = () => {
 					<Intro id={ ROUTES.INTRO } go={go} snackbarError={Snackbar}/>
 					<Test id={ ROUTES.TEST } go={go} snackbarError={Snackbar}/>
 					<Edit id={ ROUTES.EDIT } go={go} snackbarError={Snackbar}/>
+					<End id={ ROUTES.END } go={go} snackbarError={Snackbar}/>
 				</View>
 			</AppRoot>
 		</AdaptivityProvider>

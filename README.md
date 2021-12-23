@@ -1,6 +1,14 @@
 # psycho_student_front
 Разработка клиентской части учебного проекта Психологический портрет студента 
 
+# Preparations
+1. Install [git](https://git-scm.com/)
+2. Install [nodejs](https://nodejs.org)
+
+Check if everything is successfully installed:
+- `git --version` should show version
+- `node --version` also should show version.
+
 # How to start work with app
  - `git clone https://github.com/holtzdari/psycho_student_front`
  - `npm install`
