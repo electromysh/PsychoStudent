@@ -1,5 +1,5 @@
 import * as avatar from './img/default_avatar.jpeg'
-import * as logo from './img/logo.jpg'
+import * as logo from './img/logo.png'
 
 export const APP_NAME = 'Psychostudent';
 export const APP_ID = 7987636;
