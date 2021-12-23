@@ -9,14 +9,10 @@ import './Test.css';
 const Test = ({ id }) => {
 
 	const [user, setUser] = useState(null);
-	const [music, setMusic] = useState(null);
 
 	useEffect(async () => {
 		const user = await userData.getUserBaseInfo();
 		setUser(user);
-
-		const music = await userData.getUserMusic();
-		setMusic(music);
 	});
 
 	return (

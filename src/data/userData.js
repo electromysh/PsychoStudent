@@ -10,10 +10,10 @@ class UserData {
 
     getUserBaseInfo() {
         // True data
-        //return bridge.send(BRIDGE.APP_GET_USER_INFO);
+        return bridge.send(BRIDGE.APP_GET_USER_INFO);
 
         // Mock data
-        return Promise.resolve(userMock);
+        //return Promise.resolve(userMock);
     }
 
     /**

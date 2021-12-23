@@ -20,7 +20,7 @@ const Profile = ({ user }) => {
                     description={
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <span>{ user.city && user.city.title ? user.city.title : 'Город не указан'}</span>
-                            <span>{ user.country ? user.country : 'Страна не указана' }</span>
+                            <span>{ user.country ? user.country.title : 'Страна не указана' }</span>
                             <span>{ user.bdate ? user.bdate + ' г.' : 'Дата рождения не указана' }</span>
                             <span>{ user != null ? getSexString(user.sex) : 'Пол не указан' }</span>
                         </div>

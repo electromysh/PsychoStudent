@@ -10,5 +10,8 @@ export const userMock = {
         id: 0,
         title: 'Voronezh'
     },
-    country: 'Great Russian Federation'
+    country: {
+        id: 0,
+        title: 'Great Russian Federation'
+    }
 }

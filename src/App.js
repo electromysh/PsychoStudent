@@ -4,20 +4,20 @@ import { View, ScreenSpinner, AdaptivityProvider, AppRoot, Snackbar, Avatar } fr
 import '@vkontakte/vkui/dist/vkui.css';
 import { Icon24Error } from '@vkontakte/icons';
 
-import Home from './panels/Home/Home';
 import Test from './panels/Test/Test';
+import UserData from './panels/UserData/UserData';
 import Edit from './panels/Edit/Edit';
 import { BRIDGE } from './bridge-events';
 import End from './panels/End/End';
 import MarkupIntro from './panels/markup_intro/markup_intro';
 
 const ROUTES = { 
-    HOME: 'home',
 	INTRO: 'intro',
 	TEST: 'test',
 	EDIT:'edit',
 	MARKUP_INTRO: 'markup_intro',
 	END: 'End',
+	USERDATA: 'userData',
 };
 
 const STORAGE_KEYS = {
@@ -25,7 +25,7 @@ const STORAGE_KEYS = {
 }
 
 const App = () => {
-	const [activePanel, setActivePanel] = useState(ROUTES.EDIT);
+	const [activePanel, setActivePanel] = useState(ROUTES.USERDATA);
 	const [fetchedUser, setUser] = useState(null);
 	const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
 	const [UserHasSeenIntro, setUserHasSeenIntro] = useState(false);
@@ -107,11 +107,11 @@ const App = () => {
 		<AdaptivityProvider>
 			<AppRoot>
 				<View activePanel={activePanel}>
-					<Home id={ ROUTES.HOME } fetchedUser={fetchedUser} go={go} snackbarError={Snackbar}/>
-					<Test id={ ROUTES.TEST } go={go} snackbarError={Snackbar}/>
-					<Edit id={ ROUTES.EDIT } go={go} snackbarError={Snackbar}/>
 					<MarkupIntro id={ ROUTES.MARKUP_INTRO } go={go} snackbarError={Snackbar}/>
+					<Edit id={ ROUTES.EDIT } go={go} snackbarError={Snackbar}/>
+					<Test id={ ROUTES.TEST } go={go} snackbarError={Snackbar}/>
 					<End id={ ROUTES.END } go={go} snackbarError={Snackbar}/>
+					<UserData id={ ROUTES.USERDATA } go={go} snackbarError={Snackbar}/>
 				</View>
 			</AppRoot>
 		</AdaptivityProvider>
