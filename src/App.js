@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import bridge from '@vkontakte/vk-bridge';
-import { View, ScreenSpinner, AdaptivityProvider, AppRoot, Snackbar, Avatar } from '@vkontakte/vkui';
+import { View, AdaptivityProvider, AppRoot } from '@vkontakte/vkui';
 import '@vkontakte/vkui/dist/vkui.css';
-import { Icon24Error } from '@vkontakte/icons';
 
 import Test from './panels/Test/Test';
 import UserData from './panels/UserData/UserData';
 import Edit from './panels/Edit/Edit';
-import { BRIDGE } from './bridge-events';
 import End from './panels/End/End';
 import MarkupIntro from './panels/markup_intro/markup_intro';
 
 const ROUTES = { 
-	INTRO: 'intro',
 	TEST: 'test',
 	EDIT:'edit',
 	MARKUP_INTRO: 'markup_intro',
@@ -20,102 +16,50 @@ const ROUTES = {
 	USERDATA: 'userData',
 };
 
-const STORAGE_KEYS = {
-	STATUS: 'status',
-}
-
 const App = () => {
-	const [activePanel, setActivePanel] = useState(ROUTES.USERDATA);
-	const [fetchedUser, setUser] = useState(null);
-	const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
-	const [UserHasSeenIntro, setUserHasSeenIntro] = useState(false);
-	const [Snackbar, setSnackbar] = useState(false);
 
-	useEffect(() => {
-		bridge.subscribe(({ detail: { type, data }}) => {
-			if (type === BRIDGE.APP_UPDATE_CONFIG) {
-				const schemeAttribute = document.createAttribute('scheme');
-				schemeAttribute.value = data.scheme ? data.scheme : 'client_light';
-				document.body.attributes.setNamedItem(schemeAttribute);
-			}
-		});
-		async function fetchData() {
-			const user = await bridge.send(BRIDGE.APP_GET_USER_INFO);
-			const storageData = await bridge.send(BRIDGE.APP_STORAGE_GET, {
-				keys: Object.values(STORAGE_KEYS)
-			 });
-			const data = {};
-			storageData.keys.forEach( ({ key, value }) => {
-				try {
-					data[key] = value ? JSON.parse(value) : {};
-					switch(key) {
-                        case STORAGE_KEYS.STATUS:
-							if (data[key].hasSeenIntro) {
-								setActivePanel(ROUTES.HOME);
-								setUserHasSeenIntro(true);
-							}
-							break;
-					    default:
-							break;
-					}
-				} catch(error){
-					setSnackbar(<Snackbar
-						layout='vertical'
-						onClose={() => setSnackbar(null)}
-						before={<Avatar size={24} style={{ backgroundColor: 'var(--dynamic-red)' }}
-						><Icon24Error fill='#fff' width='14' height='14' /></Avatar>}
-						duration={900}
-					>
-						Проблема с получением данных из Storage
-					</Snackbar>)
-				}
-			})
-			
+	const [activePanel, setActivePanel] = useState(ROUTES.MARKUP_INTRO);
+	const [answers, setAnswers] = useState([]);
 
-			setUser(user);
-			setPopout(null);
+	useEffect(() => {})
+
+	const handleUserDataAction = ({ action }) => {
+		if (action === 'edit') {
+			setActivePanel(ROUTES.EDIT);
 		}
-		fetchData();
-	}, []);
-
-	const go = e => {
-		setActivePanel(e.currentTarget.dataset.to);
-	};
-
-	const viewIntro = async function () {
-		try {
-            await bridge.send('VKWebAppStorageSet', {
-				key: STORAGE_KEYS.STATUS,
-				value: JSON.stringify({
-					hasSeenIntro: true
-				})
-			});
-		} catch (error) {
-			setSnackbar(<Snackbar
-				layout='vertical'
-				onClose={() => setSnackbar(null)}
-				before={<Avatar size={24} style={{ backgroundColor: 'var(--dynamic-red)' }}
-				><Icon24Error fill='#fff' width='14' height='14' /></Avatar>}
-				duration={900}
-			>
-				Проблема с отправкой данных в Storage
-			</Snackbar>)
+		if (action === 'start-test') {
+			setActivePanel(ROUTES.TEST);
 		}
-	} 
+	}
+
+	const handleIntroDataAction = () => {
+		setActivePanel(ROUTES.USERDATA);
+	}
+	
+	const handleEditAction = ({ changes }) => {
+		console.log(changes);
+		setActivePanel(ROUTES.USERDATA);
+	}
+
+	const handleTestAction = ({ answers }) => {
+		setAnswers(answers);
+		setActivePanel(ROUTES.END);
+	}
 
 	return (
 		<AdaptivityProvider>
 			<AppRoot>
 				<View activePanel={activePanel}>
-					<MarkupIntro id={ ROUTES.MARKUP_INTRO } go={go} snackbarError={Snackbar}/>
-					<Edit id={ ROUTES.EDIT } go={go} snackbarError={Snackbar}/>
-					<Test id={ ROUTES.TEST } go={go} snackbarError={Snackbar}/>
-					<End id={ ROUTES.END } go={go} snackbarError={Snackbar}/>
-					<UserData id={ ROUTES.USERDATA } go={go} snackbarError={Snackbar}/>
+					<MarkupIntro handleAction={handleIntroDataAction} id={ ROUTES.MARKUP_INTRO }/>
+					<UserData handleAction={handleUserDataAction} id={ ROUTES.USERDATA }/>
+					<Edit handleAction={handleEditAction} id={ ROUTES.EDIT }/>
+					<Test handleAction={handleTestAction} id={ ROUTES.TEST }/>
+					<End answers={answers} id={ ROUTES.END }/>
 				</View>
 			</AppRoot>
 		</AdaptivityProvider>
 	);
+
 }
 
 export default App;

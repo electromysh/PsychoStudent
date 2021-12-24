@@ -1,49 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Div, Panel, Title, Text } from '@vkontakte/vkui';
+import { Div, Panel, Title } from '@vkontakte/vkui';
 import DonutChart from "react-donut-chart";
 import { userData } from '../../data/userData'
+import { questionsData } from '../../data/questionsData'
 import Header from '../../components/Header/Header'
 
 import './End.css';
+import { RADICALS, RADICALS_TEMPLATE } from '../../constants';
 
-const End = ({ id }) => {
-	const data = [
-		{
-			label: "Истероидный",
-			value: 100,
-			color: "#5B00C9"
-		},
-		{
-			label: "Шизоидный",
-			value: 65,
-			color: "#FEB019"
-		},
-		{
-			label: "Эпилептиоидный",
-			value: 100,
-			color: "#FF4560"
-		},
-		{
-			label: "Гипертимный",
-			value: 15,
-			color: "#775DD0"
-		},
-		{
-			label: "Паранойяльный",
-			value: 54,
-			color: "#21E985",
-		},
-		{
-			label: "Тревожный",
-			value: 70,
-			color: "#FF0004"
-		},
-		{
-			label: "Эмотивный",
-			value: 90,
-			color: "#00FFE7"
-		}
-	];
+const End = ({ id, answers }) => {
 	const reactDonutChartBackgroundColor = [
 		"#5B00C9",
 		"#FEB019",
@@ -53,22 +18,36 @@ const End = ({ id }) => {
 		"#FF0004",
 		"#21E985",
 	];
-	const reactDonutChartInnerRadius = 0.5;
-	const reactDonutChartSelectedOffset = 0.04;
-	const reactDonutChartHandleClick = (item, toggled) => { };
 	let reactDonutChartStrokeColor = "#FFFFFF";
 	const reactDonutChartOnMouseEnter = (item) => {
-		let color = data.find((q) => q.label === item.label).color;
+		let color = templates.find((q) => q.label === item.label).color;
 		reactDonutChartStrokeColor = color;
 	};
 
 	const [user, setUser] = useState(null);
-	const mainRadical = data.reduce((acc, curr) => acc.value < curr.value ? curr : acc, data[0]);
-	
+	const [templates, setTemplates] = useState([...RADICALS_TEMPLATE]);
+
+	const getMainRadical = () => templates.reduce((acc, curr) => acc.value < curr.value ? curr : acc, templates[0]);
+
+
 	useEffect(async () => {
 		const user = await userData.getUserBaseInfo();
 		setUser(user);
+
+		const questions = await questionsData.getQuestions();
+
+		const radicals = RADICALS.map(r => ({...r}));
+		answers.forEach((a, i) => {
+			const radicalNoForCurrentAnswer = questions[i].Answers[a][1];
+			const currentRadical = radicals.find(r => r.id === radicalNoForCurrentAnswer);
+			if (currentRadical) {
+				currentRadical.couter = currentRadical.couter ? currentRadical.couter + 1 : 1;
+			}
+		});
+		radicals.forEach((r, i) => templates[i].value = Math.round((r.couter || 0) / questions.length * 100));
+		setTemplates(templates);
 	});
+
 	return (
 		<Panel id={id}>
 			<Header avatar={user ? user.photo_100 : null} />
@@ -81,15 +60,14 @@ const End = ({ id }) => {
 					height={400}
 					onMouseEnter={(item) => reactDonutChartOnMouseEnter(item)}
 					strokeColor={reactDonutChartStrokeColor}
-					data={data}
+					data={templates}
 					colors={reactDonutChartBackgroundColor}
-					innerRadius={reactDonutChartInnerRadius}
-					selectedOffset={reactDonutChartSelectedOffset}
-					onClick={(item, toggled) => reactDonutChartHandleClick(item, toggled)}
+					innerRadius={0.5}
+					selectedOffset={0.04}
 				/>
 			</div>
 			<Div>
-				<Title level="2" weight="medium">У Вас преобладает {mainRadical.label.toLowerCase()} радикал</Title>
+				<Title level="2" weight="medium">У Вас преобладает {getMainRadical() ? getMainRadical().label.toLowerCase() : null} радикал</Title>
 				<p>Описание радикала </p>
 			</Div>
 		</Panel>

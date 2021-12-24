@@ -13,3 +13,71 @@ export const SEX_MAP_FULL = {
     0: 'Мужчина',
     1: 'Женщина',
 }
+
+export const RADICALS = [
+    {
+        id: 1,
+        label: "Истероидный",
+    },
+    {
+        id: 2,
+        label: "Шизоидный",
+    },
+    {
+        id: 3,
+        label: "Эпилептиоидный",
+    },
+    {
+        id: 4,
+        label: "Гипертимный",
+    },
+    {
+        id: 5,
+        label: "Паранойяльный",
+    },
+    {
+        id: 6,
+        label: "Тревожный",
+    },
+    {
+        id: 7,
+        label: "Эмотивный",
+    }
+]
+export const RADICALS_TEMPLATE = [
+    {
+        label: "Истероидный",
+        value: 0,
+        color: "#5B00C9"
+    },
+    {
+        label: "Шизоидный",
+        value: 0,
+        color: "#FEB019"
+    },
+    {
+        label: "Эпилептиоидный",
+        value: 0,
+        color: "#FF4560"
+    },
+    {
+        label: "Гипертимный",
+        value: 0,
+        color: "#775DD0"
+    },
+    {
+        label: "Паранойяльный",
+        value: 0,
+        color: "#21E985",
+    },
+    {
+        label: "Тревожный",
+        value: 0,
+        color: "#FF0004"
+    },
+    {
+        label: "Эмотивный",
+        value: 0,
+        color: "#00FFE7"
+    }
+]

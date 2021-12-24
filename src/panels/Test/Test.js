@@ -1,44 +1,72 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Div, Panel, Title, Radio, View, FixedLayout } from '@vkontakte/vkui';
+import { Button, Div, Panel, Title, Radio, FixedLayout, FormItem } from '@vkontakte/vkui';
 import { Icon48ArrowLeftOutline, Icon48ArrowRightOutline } from '@vkontakte/icons';
 import { userData } from '../../data/userData'
+import { questionsData } from '../../data/questionsData'
 import Header from '../../components/Header/Header'
 
 import './Test.css';
 
-const Test = ({ id }) => {
+const Test = ({ id, handleAction }) => {
 
 	const [user, setUser] = useState(null);
+	const [questions, setQuestions] = useState([]);
+	const [currentQuestionId, setCurrentQuestionId] = useState(0);
+	const [currentAnswer, setCurrentAnswer] = useState(null);
+	const [answers, setAnswers] = useState([]);
+	const handle = handleAction || (() => {});
+
+	const nextQuestion = () => {
+		if (currentAnswer == null) { return; }
+		if ((currentQuestionId + 1) >= questions.length) {
+			handle({ answers })
+		} else {
+			answers[currentQuestionId] = currentAnswer
+			setAnswers(answers);
+			setCurrentAnswer(null);
+			setCurrentQuestionId(currentQuestionId + 1);
+		}
+	}
+
+	const changeAnswer = e => {
+		setCurrentAnswer(e.target.value);
+	}
 
 	useEffect(async () => {
 		const user = await userData.getUserBaseInfo();
 		setUser(user);
+
+		const questions = await questionsData.getQuestions();
+		setQuestions(questions);
+
 	});
 
 	return (
 		<Panel id={id}>
 			<Header avatar={user ? user.photo_100 : null} />
 
-			<Div style={{ flex: 1, justifyContent: "center", alignItems: "center", paddingTop: 60, paddingBottom: 60, color: 'black' }}>
-				<Title
-					adjustsFontSizeToFit={true}
-					style={{ textAlign: "center" }}
-					level="2"
-				>
-					<span>1/13</span>
-					<br /> <br />
-					В городском музее изобразительных искусств будет проходить в течение трёх дней выставка редких живописных полотен *
-				</Title>
-			</Div>
-			<View style={{ fontSize: 18, paddingBottom: 80 }}>
-				<Radio weight="semibold" name="radio" value="1">Я обязательно пойду на эту выставку, ведь каждый культурный человек должен приобщаться к высокому искусству</Radio>
-				<Radio weight="semibold" name="radio" value="2">Я не пойду на эту выставку, ведь это только расстроит: разве можно наслаждаться живописью, когда вокруг толпа, и сзади на тебя напирают очередные посетители</Radio>
-				<Radio weight="semibold" name="radio" value="3">Я посмотрю на стоимость билетов. Сегодня многие хотят нажиться: проводят якобы культурно-просветительные мероприятия, а на самом деле просто извлекают из этого выгоду. Пусть наживаются , но только не за мой счёт</Radio>
-				<Radio weight="semibold" name="radio" value="4">Я никогда не хожу на подобные выставки. По-моему, гораздо лучше использовать это время для весёлого общения с приятелями. Я предпочту пикник, футбольный матч, посиделки в кафе и т.п. В конце концов, у кого-нибудь из нашей компании непременно будет день рождения – какая уж тут выставка!</Radio>
-				<Radio weight="semibold" name="radio" value="5">Все будет зависеть от темы, выраженной на этих полотнах: меня интересует живопись, отражающая гражданскую позицию художника</Radio>
-				<Radio weight="semibold" name="radio" value="6">Я, скорее всего, не пойду на эту выставку. Слишком много там будет посторонних людей. Ещё неизвестно, зачем они туда прийдут. Лучше лишний раз дома, при свете настольной лампы,полистаю альбом с репродукциями.</Radio>
-				<Radio weight="semibold" name="radio" value="7">Я пойду, но не на выставку, а в зоопарк, или по магазинам, или в библиотеку. Там посмотрим. Весь город ринется в музей, и много мест освободиться. Можно будет придумать что-нибудь поинтереснее банальной выставки.</Radio>
-			</View>
+			{ questions && questions.length ?
+			<div>
+				<Div style={{ flex: 1, justifyContent: "center", alignItems: "center", paddingTop: 60, paddingBottom: 60, color: 'black' }}>
+					<Title
+						adjustsFontSizeToFit={true}
+						style={{ textAlign: "center" }}
+						level="2"
+					>
+						<span>{ currentQuestionId + 1 }/{ questions.length }</span>
+						<br /> <br />
+						{ questions[currentQuestionId].Question }
+					</Title>
+				</Div>
+				<div style={{ fontSize: 18, paddingBottom: 80 }}>
+					<FormItem>
+						{ questions[currentQuestionId].Answers.map((a, i) => {
+							return <Radio key={`${currentQuestionId}${i}`} onChange={changeAnswer} weight="semibold" name="answer" value={i}>{ a[0] }</Radio>
+						}) }
+					</FormItem>
+				</div>
+			</div>
+			: null }
 			<FixedLayout vertical="bottom">
 				<Div style={{ display: 'flex', backgroundColor: "#fff" }}>
 					<Button
@@ -48,6 +76,8 @@ const Test = ({ id }) => {
 						style={{ marginRight: '10px' }}
 					></Button>
 					<Button
+						disabled={currentAnswer == null}
+						onClick={nextQuestion}
 						stretched
 						before={<Icon48ArrowRightOutline />}
 					></Button>

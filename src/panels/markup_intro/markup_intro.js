@@ -7,13 +7,13 @@ import Header from '../../components/Header/Header'
 import './markup_intro.css';
 import { LOGO } from '../../constants';
 
-const MarkupIntro = ({ id }) => {
+const MarkupIntro = ({ id, handleAction }) => {
     const logo = LOGO;
     const [user, setUser] = useState(null);
+	const handle = handleAction || (() => {});
 
 	useEffect(async () => {
 		const user = await userData.getUserBaseInfo();
-		console.log(user);
 		setUser(user);
 	});
 
@@ -29,7 +29,7 @@ const MarkupIntro = ({ id }) => {
 			</Div>
 			<FixedLayout vertical="bottom">
 				<Div style={{ display: 'flex', backgroundColor: "#fff" }}>  
-					<Button size="l" stretched>Начать тест</Button>
+					<Button onClick={handle} size="l" stretched>Погнали</Button>
 				</Div> 
 			</FixedLayout>
 			
