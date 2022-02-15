@@ -1,5 +1,5 @@
 # psycho_student_front
-Разработка клиентской части учебного проекта Психологический портрет студента 
+VK mini app "Psychological portrait of a student"
 
 # Preparations
 1. Install [git](https://git-scm.com/)
