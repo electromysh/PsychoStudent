@@ -1,5 +1,5 @@
 # psycho_student_front
-:man_student::woman_student: VK mini app "Psychological portrait of a student"
+:man_student::woman_student: frontend of VK mini app "Psychological portrait of a student"
 
 # Preparations
 1. Install [git](https://git-scm.com/)
